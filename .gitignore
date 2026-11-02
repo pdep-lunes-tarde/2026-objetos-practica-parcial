@@ -1,0 +1,10 @@
+bin
+*.md.html
+*.wsdi
+workspace
+
+# Local history
+.history
+
+# Wollok Log
+*.log
