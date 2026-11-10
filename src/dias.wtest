@@ -4,7 +4,6 @@ describe "Dia" {
     method diaDefault() = new Dia(temperaturaMedia=20, precipitacionesEnMM=50, horasDeSol=10)
 
     method diaConHorasDeSol(horasDeSol) = new Dia(temperaturaMedia=20, precipitacionesEnMM=50, horasDeSol=horasDeSol)
-    method diaConPrecipitaciones(precipitacionesEnMM) = new Dia(temperaturaMedia=20, precipitacionesEnMM=precipitacionesEnMM, horasDeSol=10)
 
     test "un dia es soleado si tuvo 12 horas de sol" {
         const dia = self.diaConHorasDeSol(12)
