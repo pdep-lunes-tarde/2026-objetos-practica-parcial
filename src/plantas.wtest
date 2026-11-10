@@ -1,16 +1,16 @@
 import practica.*
 
 describe "Herbuleana" {
-    test "una herbuleana al pasar un dia si era lluvioso queda con 3 de clorofila" {
+    test "una herbuleana al pasar un dia tenia mas de 150 de humedad queda con 15 de clorofila" {
         const herbuleana = new Herbuleana()
-        const diaLluvioso = new Dia(temperaturaMedia = 20, precipitacionesEnMM = 200, horasDeSol = 10)
+        const diaHumedo = new Dia(temperaturaMedia = 20, precipitacionesEnMM = 200, horasDeSol = 10)
 
-        herbuleana.pasarDia(diaLluvioso)
+        herbuleana.pasarDia(diaHumedo)
 
-        assert.equals(3, herbuleana.clorofila())
+        assert.equals(15, herbuleana.clorofila())
     }
 
-    test "una herbuleana al pasar un dia si no era lluvioso queda con 1 de clorofila" {
+    test "una herbuleana al pasar un dia si tenia menos de 150 de humedad queda con 1 de clorofila" {
         const herbuleana = new Herbuleana()
         const diaSeco = new Dia(temperaturaMedia = 20, precipitacionesEnMM = 0, horasDeSol = 10)
 

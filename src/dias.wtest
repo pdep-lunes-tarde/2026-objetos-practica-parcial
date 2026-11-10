@@ -24,24 +24,6 @@ describe "Dia" {
         assert.notThat(dia.soleado())
     }
 
-    test "un dia es lluvioso si tuvo 200 mm de precipitaciones" {
-        const dia = self.diaConPrecipitaciones(200)
-
-        assert.that(dia.lluvioso())
-    }
-
-    test "un dia es lluvioso si tuvo mas de 200 mm de precipitaciones" {
-        const dia = self.diaConPrecipitaciones(250)
-
-        assert.that(dia.lluvioso())
-    }
-
-    test "un dia es lluvioso si tuvo menos de 200 mm de precipitaciones" {
-        const dia = self.diaConPrecipitaciones(199)
-
-        assert.notThat(dia.lluvioso())
-    }
-
     test "el nivel de humedad de un dia es la cantidad de precipitaciones en mm + los grados que hubo por encima de 10" {
         const dia = new Dia(precipitacionesEnMM=100, temperaturaMedia=15, horasDeSol=10)
 

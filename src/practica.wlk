@@ -7,7 +7,6 @@ class Dia {
     method horasDeSol() = horasDeSol
     method precipitacionesEnMM() = precipitacionesEnMM
     method soleado() = horasDeSol >= 12
-    method lluvioso() = precipitacionesEnMM >= 200
     method nivelDeHumedad() = precipitacionesEnMM + (temperaturaMedia - 10).max(0)
 }
 
@@ -44,13 +43,13 @@ class Planta {
 }
 
 class Herbuleana inherits Planta {
-    var estuvoLluvioso = false
+    var fueDiaHumedo = false
 
     override method pasarDia(dia) {
-        estuvoLluvioso = dia.lluvioso()
+        fueDiaHumedo = dia.nivelDeHumedad() >= 150
     }
 
-    override method clorofila() = if(estuvoLluvioso) 3 else 1
+    override method clorofila() = if(fueDiaHumedo) 15 else 1
 
     override method cantidadDeCaracteresQuePuedeSerializar() = 0
 
