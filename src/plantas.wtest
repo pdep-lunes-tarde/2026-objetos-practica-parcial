@@ -1,0 +1,241 @@
+import practica.*
+
+describe "Herbuleana" {
+    test "una herbuleana al pasar un dia si era lluvioso queda con 3 de clorofila" {
+        const herbuleana = new Herbuleana()
+        const diaLluvioso = new Dia(temperaturaMedia = 20, precipitacionesEnMM = 200, horasDeSol = 10)
+
+        herbuleana.pasarDia(diaLluvioso)
+
+        assert.equals(3, herbuleana.clorofila())
+    }
+
+    test "una herbuleana al pasar un dia si no era lluvioso queda con 1 de clorofila" {
+        const herbuleana = new Herbuleana()
+        const diaSeco = new Dia(temperaturaMedia = 20, precipitacionesEnMM = 0, horasDeSol = 10)
+
+        herbuleana.pasarDia(diaSeco)
+
+        assert.equals(1, herbuleana.clorofila())
+    }
+}
+
+describe "Cromaticas" {
+    test "una cromatica roja al pasar un dia varia su clorofila en la distancia entre la temperatura media y 20" {
+        const roja = new CromaticaRoja()
+        const dia = new Dia(temperaturaMedia = 15, precipitacionesEnMM = 50, horasDeSol = 10)
+
+        roja.pasarDia(dia)
+
+        assert.equals(15, roja.clorofila())
+    }
+
+    test "una cromatica verde al pasar un dia si era soleado aumenta su clorofila en 1" {
+        const verde = new CromaticaVerde()
+        const diaSoleado = new Dia(temperaturaMedia = 20, precipitacionesEnMM = 50, horasDeSol = 12)
+
+        verde.pasarDia(diaSoleado)
+
+        assert.equals(11, verde.clorofila())
+    }
+
+    test "una cromatica verde al pasar un dia si no era soleado disminuye su clorofila en 0.5" {
+        const verde = new CromaticaVerde()
+        const diaNoSoleado = new Dia(temperaturaMedia = 20, precipitacionesEnMM = 50, horasDeSol = 10)
+
+        verde.pasarDia(diaNoSoleado)
+
+        assert.equals(9.5, verde.clorofila())
+    }
+
+    test "una cromatica esmeralda al pasar un dia si era soleado aumenta su clorofila en 2" {
+        const esmeralda = new CromaticaEsmeralda()
+        const diaSoleado = new Dia(temperaturaMedia = 20, precipitacionesEnMM = 50, horasDeSol = 12)
+
+        esmeralda.pasarDia(diaSoleado)
+
+        assert.equals(12, esmeralda.clorofila())
+    }
+
+    test "una cromatica esmeralda al pasar un dia si no era soleado disminuye su clorofila en 1" {
+        const esmeralda = new CromaticaEsmeralda()
+        const diaNoSoleado = new Dia(temperaturaMedia = 20, precipitacionesEnMM = 50, horasDeSol = 10)
+
+        esmeralda.pasarDia(diaNoSoleado)
+
+        assert.equals(9, esmeralda.clorofila())
+    }
+
+    test "una cromatica azul aumenta en 0.1 su clorofila por cada punto de nivel de humedad" {
+        const azul = new CromaticaAzul()
+        const dia = new Dia(temperaturaMedia = 20, precipitacionesEnMM = 10, horasDeSol = 10)
+
+        azul.pasarDia(dia)
+
+        assert.equals(12, azul.clorofila())
+    }
+
+    test "una cromatica nunca puede quedar con menos de 1 de clorofila" {
+        const esmeralda = new CromaticaEsmeralda(clorofila = 1.5)
+        const diaNoSoleado = new Dia(temperaturaMedia = 20, precipitacionesEnMM = 0, horasDeSol = 2)
+
+        esmeralda.pasarDia(diaNoSoleado)
+
+        assert.equals(1, esmeralda.clorofila())
+    }
+}
+
+describe "PilastackisPatagonica" {
+    test "la clorofila producida por una flor de pilastackis es igual a la cantidad de petalos que tiene por el nectar que produce" {
+        const flor = new Flor(petalos = 3, nectar = 4)
+
+        assert.equals(12, flor.clorofila())
+    }
+
+    test "la clorofila de una pilastackis se calcula como la sumatoria de la clorofila producida por sus flores" {
+        const pilastackis = new PilastackisPatagonica(flores = [new Flor(petalos = 12, nectar = 3), new Flor(petalos = 14, nectar = 2)])
+
+        assert.equals(64, pilastackis.clorofila())
+    }
+
+    test "la pilastackis al pasar un dia soleado agrega una flor con tantos petalos como horas de sol y que produce tanto nectar como precipitaciones hubo en mm, aumentando su clorofila en lo que genera esa flor" {
+        const pilastackis = new PilastackisPatagonica()
+        const diaSoleado = new Dia(temperaturaMedia = 20, precipitacionesEnMM = 3, horasDeSol = 14)
+
+        pilastackis.pasarDia(diaSoleado)
+
+        assert.equals(42, pilastackis.clorofila())
+    }
+
+    test "la pilastackis al pasar un dia no soleado pierde su ultima flor, disminuyendo su clorofila en lo que generaba esa flor" {
+        const pilastackis = new PilastackisPatagonica(flores = [new Flor(petalos = 14, nectar = 3)])
+        const diaNoSoleado = new Dia(temperaturaMedia = 20, precipitacionesEnMM = 0, horasDeSol = 2)
+
+        pilastackis.pasarDia(diaNoSoleado)
+
+        assert.equals(0, pilastackis.clorofila())
+    }
+
+    test "una pilastackis al pasar un dia soleado y luego un dia no soleado produce la misma clorofila que antes de pasar esos dias" {
+        const pilastackis = new PilastackisPatagonica(flores = [new Flor(petalos = 12, nectar = 3)])
+        const clorofilaInicial = pilastackis.clorofila()
+
+        const diaSoleado = new Dia(temperaturaMedia = 20, precipitacionesEnMM = 5, horasDeSol = 14)
+        const diaNoSoleado = new Dia(temperaturaMedia = 20, precipitacionesEnMM = 0, horasDeSol = 2)
+        pilastackis.pasarDia(diaSoleado)
+        pilastackis.pasarDia(diaNoSoleado)
+
+        assert.equals(clorofilaInicial, pilastackis.clorofila())
+    }
+}
+
+describe "Planta - en riesgo y marchita" {
+    test "una planta esta en riesgo si su clorofila es mayor a 0 pero menor a 5" {
+        const roja = new CromaticaRoja(clorofila = 3)
+
+        assert.that(roja.enRiesgo())
+    }
+
+    test "una planta no esta en riesgo si su clorofila es mayor a 5" {
+        const roja = new CromaticaRoja(clorofila = 6)
+
+        assert.notThat(roja.enRiesgo())
+    }
+
+    test "una planta no esta en riesgo si su clorofila es 0" {
+        const pilastackis = new PilastackisPatagonica()
+
+        assert.notThat(pilastackis.enRiesgo())
+    }
+
+    test "una planta esta marchita si su clorofila llega a cero" {
+        const pilastackis = new PilastackisPatagonica()
+
+        assert.that(pilastackis.marchita())
+    }
+
+    test "una planta no esta marchita si su clorofila es mayor a cero" {
+        const herbuleana = new Herbuleana()
+
+        assert.notThat(herbuleana.marchita())
+    }
+}
+
+describe "RamusDuplus" {
+    test "una ramus duplus sin estar conectada a ninguna planta tiene clorofila 0" {
+        const duplera = new RamusDuplus()
+
+        assert.equals(0, duplera.clorofila())
+    }
+
+    test "una ramus duplus conectada por solo una extremidad tiene una clorofila igual a la de esa planta" {
+        const duplera = new RamusDuplus(talloIzquierdo = new CromaticaRoja(clorofila = 7))
+
+        assert.equals(7, duplera.clorofila())
+    }
+
+    test "al pasar un dia la ramus duplus hace pasar el dia a las plantas de sus 2 extremidades" {
+        const izquierda = new CromaticaRoja()
+        const derecha = new CromaticaVerde()
+        const duplera = new RamusDuplus(talloIzquierdo = izquierda, talloDerecho = derecha)
+        const dia = new Dia(temperaturaMedia = 25, precipitacionesEnMM = 50, horasDeSol = 12)
+
+        duplera.pasarDia(dia)
+
+        assert.equals(15, izquierda.clorofila())
+        assert.equals(11, derecha.clorofila())
+    }
+
+    test "una ramus duplus conectada a solo una planta al pasar el dia hace pasar el dia a esa planta" {
+        const izquierda = new CromaticaVerde()
+        const duplera = new RamusDuplus(talloIzquierdo = izquierda)
+        const diaSoleado = new Dia(temperaturaMedia = 20, precipitacionesEnMM = 50, horasDeSol = 12)
+
+        duplera.pasarDia(diaSoleado)
+
+        assert.equals(11, izquierda.clorofila())
+    }
+}
+
+describe "SwitchSorrel" {
+    test "una switch sorrel sin estar conectada a ninguna planta tiene clorofila 0" {
+        const suicharda = new SwitchSorrel()
+
+        assert.equals(0, suicharda.clorofila())
+    }
+
+    test "para una switch sorrel si la raiz esta vinculada a una planta con clorofila 10 o mas, su planta activa es la izquierda" {
+        const izquierda = new CromaticaRoja()
+        const suicharda = new SwitchSorrel(raiz = new CromaticaVerde(clorofila = 15), talloIzquierdo = izquierda, talloDerecho = new CromaticaRoja())
+
+        assert.equals(izquierda, suicharda.plantaActiva())
+    }
+
+    test "para una switch sorrel si la raiz esta vinculada a una planta con clorofila 10, su planta activa es la izquierda" {
+        const izquierda = new CromaticaRoja()
+        const suicharda = new SwitchSorrel(raiz = new CromaticaRoja(clorofila = 10), talloIzquierdo = izquierda, talloDerecho = new CromaticaRoja())
+
+        assert.equals(izquierda, suicharda.plantaActiva())
+    }
+
+    test "para una switch sorrel si la raiz esta vinculada a una planta con clorofila menor a 10, su planta activa es la derecha" {
+        const derecha = new CromaticaRoja()
+        const suicharda = new SwitchSorrel(raiz = new CromaticaVerde(clorofila = 9), talloIzquierdo = new CromaticaRoja(), talloDerecho = derecha)
+
+        assert.equals(derecha, suicharda.plantaActiva())
+    }
+
+    test "al pasar un dia, la planta activa de la switch sorrel pasa un dia pero ni la otra ni la raiz pasan" {
+        const raiz = new CromaticaVerde(clorofila = 10)
+        const izquierda = new CromaticaRoja()
+        const derecha = new CromaticaRoja()
+        const suicharda = new SwitchSorrel(raiz = raiz, talloIzquierdo = izquierda, talloDerecho = derecha)
+        const dia = new Dia(temperaturaMedia = 25, precipitacionesEnMM = 50, horasDeSol = 12)
+
+        suicharda.pasarDia(dia)
+
+        assert.equals(15, izquierda.clorofila())
+        assert.equals(10, derecha.clorofila())
+        assert.equals(10, raiz.clorofila())
+    }
+}

@@ -1,0 +1,68 @@
+import practica.*
+
+describe "EquipoDeInvestigacion" {
+    test "para un equipo de investigacion sin plantas investigadas el promedio de clorofila es 0" {
+        const equipo = new EquipoDeInvestigacion()
+
+        assert.equals(0, equipo.clorofilaPromedio())
+    }
+
+    test "para un equipo de investigacion con solo una planta el promedio de clorofila es igual a la clorofila de esa planta" {
+        const equipo = new EquipoDeInvestigacion()
+        const roja = new CromaticaRoja(clorofila = 7)
+        equipo.agregarPlanta(roja)
+
+        assert.equals(7, equipo.clorofilaPromedio())
+    }
+
+    test "para un equipo de investigacion con varias plantas el promedio de clorofila es el promedio de la clorofila de cada planta" {
+        const equipo = new EquipoDeInvestigacion()
+        equipo.agregarPlanta(new CromaticaRoja(clorofila = 10))
+        equipo.agregarPlanta(new CromaticaRoja(clorofila = 15))
+        equipo.agregarPlanta(new CromaticaRoja(clorofila = 20))
+
+        assert.equals(15, equipo.clorofilaPromedio())
+    }
+
+    test "las plantas en riesgo de un equipo de investigacion son aquellas plantas cuya clorofila esta entre 0 (no inclusive) y 5" {
+        const equipo = new EquipoDeInvestigacion()
+        const sana = new CromaticaRoja(clorofila = 10)
+        const enRiesgo1 = new CromaticaVerde(clorofila = 3)
+        const enRiesgo2 = new CromaticaVerde(clorofila = 5)
+        equipo.agregarPlanta(sana)
+        equipo.agregarPlanta(enRiesgo1)
+        equipo.agregarPlanta(enRiesgo2)
+
+        const plantasEnRiesgo = equipo.plantasEnRiesgo()
+
+        assert.that(plantasEnRiesgo.contains(enRiesgo1))
+        assert.that(plantasEnRiesgo.contains(enRiesgo2))
+        assert.notThat(plantasEnRiesgo.contains(sana))
+    }
+
+    test "al realizar una limpieza, el equipo de investigacion deja de investigar aquellas plantas que ya se marchitaron" {
+        const equipo = new EquipoDeInvestigacion()
+        const seca = new PilastackisPatagonica()
+        const sana = new CromaticaRoja(clorofila = 8)
+        equipo.agregarPlanta(seca)
+        equipo.agregarPlanta(sana)
+
+        equipo.dejarDeInvestigarPlantasMarchitas()
+
+        assert.equals(8, equipo.clorofilaPromedio())
+    }
+
+    test "al hacer pasar un dia, todas las plantas investigadas por el equipo pasan un dia" {
+        const equipo = new EquipoDeInvestigacion()
+        const roja = new CromaticaRoja()
+        const verde = new CromaticaVerde()
+        equipo.agregarPlanta(roja)
+        equipo.agregarPlanta(verde)
+        const dia = new Dia(temperaturaMedia = 25, precipitacionesEnMM = 50, horasDeSol = 12)
+
+        equipo.hacerlasPasarDia(dia)
+
+        assert.equals(15, roja.clorofila())
+        assert.equals(11, verde.clorofila())
+    }
+}

@@ -1,0 +1,157 @@
+import practica.*
+
+describe "Codificacion en cromaticas" {
+    test "si a una cromatica se le pide codificar un mensaje de 2 caracteres falla" {
+        const roja = new CromaticaRoja()
+
+        assert.throwsExceptionWithMessage("El mensaje no entra en esta planta", { => roja.serializarMensaje("ab") })
+    }
+
+    test "al codificar un mensaje de 1 caracter, la cromatica pasa a tener el codigo de ese caracter como clorofila" {
+        const roja = new CromaticaRoja()
+
+        roja.serializarMensaje("f")
+
+        assert.equals(6, roja.clorofila())
+    }
+
+    test "al decodificar, la cromatica convierte su clorofila en el caracter correspondiente" {
+        const roja = new CromaticaRoja()
+        roja.serializarMensaje("f")
+
+        assert.equals("f", roja.decodificarMensaje())
+    }
+}
+
+describe "Codigos de caracteres" {
+    test "al codificar una letra minuscula, una planta lo codifica como el numero que tiene en el abecedario" {
+        const roja = new CromaticaRoja()
+
+        roja.serializarMensaje("b")
+
+        assert.equals(2, roja.clorofila())
+    }
+
+    test "al codificar algo que no es una letra minuscula, una planta lo codifica como el numero 4267" {
+        const roja = new CromaticaRoja()
+
+        roja.serializarMensaje("B")
+
+        assert.equals(4267, roja.clorofila())
+    }
+
+    test "al decodificar un codigo que corresponde a una letra minuscula, la planta lo decodifica a esa letra" {
+        const roja = new CromaticaRoja()
+        roja.serializarMensaje("b")
+
+        assert.equals("b", roja.decodificarMensaje())
+    }
+
+    test "al decodificar un codigo que no corresponde a una letra minuscula, la planta lo decodifica a un espacio" {
+        const roja = new CromaticaRoja()
+        roja.serializarMensaje("B")
+
+        assert.equals(" ", roja.decodificarMensaje())
+    }
+}
+
+describe "Codificacion en pilastackis" {
+    method pilastackisConFlores(cantidad) = new PilastackisPatagonica(flores = (1..cantidad).map { i => new Flor(petalos = 1, nectar = 1) })
+
+    test "si a una pilastackis se le pide codificar un mensaje con mas letras que las flores que tiene falla" {
+        const pilastackis = self.pilastackisConFlores(1)
+
+        assert.throwsExceptionWithMessage("El mensaje no entra en esta planta", { => pilastackis.serializarMensaje("ab") })
+    }
+
+    test "al codificar un mensaje de tantas letras como flores tiene, la pilastackis convierte el nectar de cada flor en el codigo asociado a cada caracter del mensaje" {
+        const flor1 = new Flor(nectar=10, petalos=3)
+        const flor2 = new Flor(nectar=10, petalos=3)
+        const flor3 = new Flor(nectar=10, petalos=3)
+        const pilastackis = new PilastackisPatagonica(flores=[flor1, flor2, flor3])
+
+        pilastackis.serializarMensaje("ble")
+
+        assert.equals(flor1.nectar(), 2)
+        assert.equals(flor2.nectar(), 12)
+        assert.equals(flor3.nectar(), 5)
+    }
+
+    test "si una planta codifica un mensaje con menos letras que el espacio que tiene, completa el resto con el numero 4267" {
+        const pilastackis = self.pilastackisConFlores(3)
+
+        pilastackis.serializarMensaje("a")
+
+        assert.equals("a  ", pilastackis.decodificarMensaje())
+    }
+
+    test "al decodificar un mensaje, la pilastackis convierte el nectar de cada una de sus flores en los caracteres correspondientes" {
+        const pilastackis = self.pilastackisConFlores(2)
+        pilastackis.serializarMensaje("ba")
+
+        assert.equals("ba", pilastackis.decodificarMensaje())
+    }
+}
+
+describe "Codificacion en herbuleana" {
+    test "la herbuleana no puede codificar ningun mensaje" {
+        const herbuleana = new Herbuleana()
+
+        assert.equals(0, herbuleana.cantidadDeCaracteresQuePuedeSerializar())
+        assert.throwsExceptionWithMessage("El mensaje no entra en esta planta", { => herbuleana.serializarMensaje("a") })
+    }
+}
+
+describe "Codificacion en switch sorrel" {
+    test "si la planta activa de la switch sorrel no puede codificar el mensaje, la switch sorrel falla al intentar codificarlo" {
+        const switchSorrel = new SwitchSorrel(raiz = new CromaticaRoja(), talloIzquierdo = new Herbuleana(), talloDerecho = new Herbuleana())
+
+        assert.throwsExceptionWithMessage("El mensaje no entra en esta planta", { => switchSorrel.serializarMensaje("a") })
+    }
+
+    test "al codificar un mensaje en una switch sorrel la planta activa de la switch sorrel lo codifica" {
+        const izquierda = new CromaticaVerde()
+        const switchSorrel = new SwitchSorrel(raiz = new CromaticaRoja(), talloIzquierdo = izquierda, talloDerecho = new Herbuleana())
+
+        switchSorrel.serializarMensaje("c")
+
+        assert.equals(3, izquierda.clorofila())
+    }
+
+    test "al decodificar un mensaje una switch sorrel lo decodifica como lo haria su planta activa" {
+        const izquierda = new CromaticaVerde()
+        const switchSorrel = new SwitchSorrel(raiz = new CromaticaRoja(), talloIzquierdo = izquierda, talloDerecho = new Herbuleana())
+        switchSorrel.serializarMensaje("c")
+
+        assert.equals(izquierda.decodificarMensaje(), switchSorrel.decodificarMensaje())
+    }
+}
+
+describe "Codificacion en ramus duplus" {
+    test "una ramus duplus puede guardar mensajes de tanto largo como la suma de los mensajes que pueden guardar sus dos plantas" {
+        const ramusDuplus = new RamusDuplus(talloIzquierdo = new CromaticaRoja(), talloDerecho = new CromaticaVerde())
+
+        assert.equals(2, ramusDuplus.cantidadDeCaracteresQuePuedeSerializar())
+        assert.throwsExceptionWithMessage("El mensaje no entra en esta planta", { => ramusDuplus.serializarMensaje("abc") })
+    }
+
+    test "al codificar un mensaje la ramus duplus guarda tanto como se pueda en la primer planta y el resto en la segunda" {
+        const izquierda = new CromaticaRoja()
+        const derecha = new CromaticaVerde()
+        const ramusDuplus = new RamusDuplus(talloIzquierdo = izquierda, talloDerecho = derecha)
+
+        ramusDuplus.serializarMensaje("ab")
+
+        assert.equals(1, izquierda.clorofila())
+        assert.equals(2, derecha.clorofila())
+    }
+
+    test "al decodificar un mensaje la ramus duplus decodifica los mensajes que guardan cada una de sus plantas y los une" {
+        const izquierda = new CromaticaRoja()
+        const derecha = new CromaticaVerde()
+        const ramusDuplus = new RamusDuplus(talloIzquierdo = izquierda, talloDerecho = derecha)
+        ramusDuplus.serializarMensaje("ab")
+
+        assert.equals("ab", ramusDuplus.decodificarMensaje())
+    }
+}

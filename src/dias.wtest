@@ -1,0 +1,56 @@
+import practica.*
+
+describe "Dia" {
+    method diaDefault() = new Dia(temperaturaMedia=20, precipitacionesEnMM=50, horasDeSol=10)
+
+    method diaConHorasDeSol(horasDeSol) = new Dia(temperaturaMedia=20, precipitacionesEnMM=50, horasDeSol=horasDeSol)
+    method diaConPrecipitaciones(precipitacionesEnMM) = new Dia(temperaturaMedia=20, precipitacionesEnMM=precipitacionesEnMM, horasDeSol=10)
+
+    test "un dia es soleado si tuvo 12 horas de sol" {
+        const dia = self.diaConHorasDeSol(12)
+
+        assert.that(dia.soleado())
+    }
+
+    test "un dia es soleado si tuvo mas de 12 horas de sol" {
+        const dia = self.diaConHorasDeSol(13)
+
+        assert.that(dia.soleado())
+    }
+
+    test "un dia es soleado si tuvo menos de 12 horas de sol" {
+        const dia = self.diaConHorasDeSol(11)
+
+        assert.notThat(dia.soleado())
+    }
+
+    test "un dia es lluvioso si tuvo 200 mm de precipitaciones" {
+        const dia = self.diaConPrecipitaciones(200)
+
+        assert.that(dia.lluvioso())
+    }
+
+    test "un dia es lluvioso si tuvo mas de 200 mm de precipitaciones" {
+        const dia = self.diaConPrecipitaciones(250)
+
+        assert.that(dia.lluvioso())
+    }
+
+    test "un dia es lluvioso si tuvo menos de 200 mm de precipitaciones" {
+        const dia = self.diaConPrecipitaciones(199)
+
+        assert.notThat(dia.lluvioso())
+    }
+
+    test "el nivel de humedad de un dia es la cantidad de precipitaciones en mm + los grados que hubo por encima de 10" {
+        const dia = new Dia(precipitacionesEnMM=100, temperaturaMedia=15, horasDeSol=10)
+
+        assert.equals(105, dia.nivelDeHumedad())
+    }
+
+    test "si un dia tuvo menos de 10 grados el nivel de humedad es directamente la cantidad de precipitaciones en mm" {
+        const dia = new Dia(precipitacionesEnMM=100, temperaturaMedia=5, horasDeSol=10)
+
+        assert.equals(100, dia.nivelDeHumedad())
+    }
+}
