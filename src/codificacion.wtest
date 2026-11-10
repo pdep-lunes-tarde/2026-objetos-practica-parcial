@@ -56,7 +56,7 @@ describe "Codigos de caracteres" {
 }
 
 describe "Codificacion en pilastackis" {
-    method pilastackisConFlores(cantidad) = new PilastackisPatagonica(flores = (1..cantidad).map { i => new Flor(petalos = 1, nectar = 1) })
+    method pilastackisConFlores(cantidad) = new Pilastackis(flores = (1..cantidad).map { i => new Flor(petalos = 1, nectar = 1) })
 
     test "si a una pilastackis se le pide codificar un mensaje con mas letras que las flores que tiene falla" {
         const pilastackis = self.pilastackisConFlores(1)
@@ -68,7 +68,7 @@ describe "Codificacion en pilastackis" {
         const flor1 = new Flor(nectar=10, petalos=3)
         const flor2 = new Flor(nectar=10, petalos=3)
         const flor3 = new Flor(nectar=10, petalos=3)
-        const pilastackis = new PilastackisPatagonica(flores=[flor1, flor2, flor3])
+        const pilastackis = new Pilastackis(flores=[flor1, flor2, flor3])
 
         pilastackis.serializarMensaje("ble")
 

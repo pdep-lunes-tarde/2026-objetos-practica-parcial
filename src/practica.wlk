@@ -68,7 +68,7 @@ class Flor {
     method clorofila() = petalos * nectar
 }
 
-class PilastackisPatagonica inherits Planta {
+class Pilastackis inherits Planta {
     const flores = []
 
     override method pasarDia(dia) {

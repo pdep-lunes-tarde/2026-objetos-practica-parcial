@@ -85,7 +85,7 @@ describe "Cromaticas" {
     }
 }
 
-describe "PilastackisPatagonica" {
+describe "Pilastackis" {
     test "la clorofila producida por una flor de pilastackis es igual a la cantidad de petalos que tiene por el nectar que produce" {
         const flor = new Flor(petalos = 3, nectar = 4)
 
@@ -93,13 +93,13 @@ describe "PilastackisPatagonica" {
     }
 
     test "la clorofila de una pilastackis se calcula como la sumatoria de la clorofila producida por sus flores" {
-        const pilastackis = new PilastackisPatagonica(flores = [new Flor(petalos = 12, nectar = 3), new Flor(petalos = 14, nectar = 2)])
+        const pilastackis = new Pilastackis(flores = [new Flor(petalos = 12, nectar = 3), new Flor(petalos = 14, nectar = 2)])
 
         assert.equals(64, pilastackis.clorofila())
     }
 
     test "la pilastackis al pasar un dia soleado agrega una flor con tantos petalos como horas de sol y que produce tanto nectar como precipitaciones hubo en mm, aumentando su clorofila en lo que genera esa flor" {
-        const pilastackis = new PilastackisPatagonica()
+        const pilastackis = new Pilastackis()
         const diaSoleado = new Dia(temperaturaMedia = 20, precipitacionesEnMM = 3, horasDeSol = 14)
 
         pilastackis.pasarDia(diaSoleado)
@@ -108,7 +108,7 @@ describe "PilastackisPatagonica" {
     }
 
     test "la pilastackis al pasar un dia no soleado pierde su ultima flor, disminuyendo su clorofila en lo que generaba esa flor" {
-        const pilastackis = new PilastackisPatagonica(flores = [new Flor(petalos = 14, nectar = 3)])
+        const pilastackis = new Pilastackis(flores = [new Flor(petalos = 14, nectar = 3)])
         const diaNoSoleado = new Dia(temperaturaMedia = 20, precipitacionesEnMM = 0, horasDeSol = 2)
 
         pilastackis.pasarDia(diaNoSoleado)
@@ -117,7 +117,7 @@ describe "PilastackisPatagonica" {
     }
 
     test "una pilastackis al pasar un dia soleado y luego un dia no soleado produce la misma clorofila que antes de pasar esos dias" {
-        const pilastackis = new PilastackisPatagonica(flores = [new Flor(petalos = 12, nectar = 3)])
+        const pilastackis = new Pilastackis(flores = [new Flor(petalos = 12, nectar = 3)])
         const clorofilaInicial = pilastackis.clorofila()
 
         const diaSoleado = new Dia(temperaturaMedia = 20, precipitacionesEnMM = 5, horasDeSol = 14)
@@ -143,13 +143,13 @@ describe "Planta - en riesgo y marchita" {
     }
 
     test "una planta no esta en riesgo si su clorofila es 0" {
-        const pilastackis = new PilastackisPatagonica()
+        const pilastackis = new Pilastackis()
 
         assert.notThat(pilastackis.enRiesgo())
     }
 
     test "una planta esta marchita si su clorofila llega a cero" {
-        const pilastackis = new PilastackisPatagonica()
+        const pilastackis = new Pilastackis()
 
         assert.that(pilastackis.marchita())
     }

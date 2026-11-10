@@ -42,7 +42,7 @@ describe "EquipoDeInvestigacion" {
 
     test "al realizar una limpieza, el equipo de investigacion deja de investigar aquellas plantas que ya se marchitaron" {
         const equipo = new EquipoDeInvestigacion()
-        const seca = new PilastackisPatagonica()
+        const seca = new Pilastackis()
         const sana = new CromaticaRoja(clorofila = 8)
         equipo.agregarPlanta(seca)
         equipo.agregarPlanta(sana)
