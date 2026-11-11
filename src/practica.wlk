@@ -14,6 +14,7 @@ class MensajeDemasiadoLargoException inherits Exception {}
 
 class Planta {
     const abecedario = "abcdefghijklmnñopqrstuvwxyz"
+    const codigoDeRelleno = 4267
 
     method decodificarMensaje()
     method serializarMensaje(mensaje) {
@@ -25,13 +26,13 @@ class Planta {
     method cantidadDeCaracteresQuePuedeSerializar()
     method escribirMensaje(mensaje)
 
-    method caracterACodigo(caracter) = if(abecedario.contains(caracter)) abecedario.indexOf(caracter) + 1 else 4267
+    method caracterACodigo(caracter) = if(abecedario.contains(caracter)) abecedario.indexOf(caracter) + 1 else codigoDeRelleno
     method codigoACaracter(codigo) = if(codigo >= 1 && codigo <= abecedario.size()) abecedario.charAt(codigo - 1) else " "
     method mensajeACodigo(mensaje, capacidad) {
         const caracteres = mensaje.split("")
         const mensajeCodificado = caracteres.map { caracter => self.caracterACodigo(caracter) }
         const cantidadDeEspacioAAgregar = (capacidad - mensaje.size()).max(0)
-        cantidadDeEspacioAAgregar.times { _ => mensajeCodificado.add(4267) }
+        cantidadDeEspacioAAgregar.times { _ => mensajeCodificado.add(codigoDeRelleno) }
 
         return mensajeCodificado
     }
